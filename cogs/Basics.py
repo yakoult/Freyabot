@@ -1,6 +1,7 @@
 import discord
 import random
 import sys
+import requests
 from PIL import Image, ImageFont, ImageDraw, ImageOps, ImageFilter
 from io import BytesIO
 from discord.ext import commands
@@ -16,7 +17,7 @@ class Basics(commands.Cog):
     async def on_member_join(self, member):
         channel = self.bot.get_channel(self.set_channel)
         if channel is not None:
-            text = f'Welcome! You are our #{ctx.guild.member_count} member!'
+            text = f'Welcome! You are our #{member.guild.member_count} member!'
             img = Image.open(r'./banner/spicewolf.png')
             draw = ImageDraw.Draw(img)
             font = ImageFont.truetype(r'./fonts/Xlines.ttf', 30)
@@ -28,9 +29,7 @@ class Basics(commands.Cog):
             img.paste(avatar, (520, 80), mask)
             img.save('./banner/banner.png')
             file = discord.File('./banner/banner.png', filename='banner.png')
-            embed = discord.Embed()
-            embed.set_image(url="attachment://banner.png")
-            await ctx.send(file=file, embed=embed)
+            await channel.send(content=""file=file)
 
     @commands.command()
     async def hello(self, ctx, *, member: discord.Member = None):
