@@ -1,0 +1,2 @@
+# freyabot
+Multipurpose discord bot 
