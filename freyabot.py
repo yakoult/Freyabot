@@ -26,7 +26,7 @@ async def determine_prefix(bot, message):
         return default_prefixes
 
 #bot setup
-token = 'NjM2NzkxMzc2Nzg4MzI0MzUz.XdTuuQ.ZCmm8wJhImOs2OvpkDms39CxZHo'
+token = 'NjM2NzkxMzc2Nzg4MzI0MzUz.XdX6xQ.7sTkXNguLGNyhSOvY6IASuZdwfc'
 bot = commands.Bot(command_prefix=determine_prefix)
 admin = 170096122692501505
 freyaid = 561053934589050880

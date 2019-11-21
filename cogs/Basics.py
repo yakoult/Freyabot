@@ -1,9 +1,8 @@
 import discord
 import random
-from PIL import Image
-from PIL import ImageFont
-from PIL import ImageDraw
 import sys
+from PIL import Image, ImageFont, ImageDraw, ImageOps, ImageFilter
+from io import BytesIO
 from discord.ext import commands
 
 class Basics(commands.Cog):
@@ -11,21 +10,27 @@ class Basics(commands.Cog):
         self.bot = bot
         self._last_member = None
         self.count = 0
+        self.set_channel = 634939948222382082
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        channel = self.bot.get_channel(634939948222382082)
+        channel = self.bot.get_channel(self.set_channel)
         if channel is not None:
-            text = f'Welcome to the server {member.name}'
+            text = f'Welcome! You are our #{ctx.guild.member_count} member!'
             img = Image.open(r'./banner/spicewolf.png')
             draw = ImageDraw.Draw(img)
-            font = ImageFont.truetype(r'./fonts/Arial.ttf', 20)
-            draw.text((230, 120), text, (255,255,255), font=font)
-            img.save('./banner/testfile.png')
-            file = discord.File('./banner/testfile.png', filename='testfile.png')
+            font = ImageFont.truetype(r'./fonts/Xlines.ttf', 30)
+            draw.text((330, 250), text, (65,60,80), font=font)
+            avatar = "https://cdn.discordapp.com/avatars/{0.id}/{0.avatar}.png".format(member)
+            response = requests.get(avatar)
+            avatar = Image.open(BytesIO(response.content))
+            mask = Image.open(r'./banner/mask.png').convert('L')
+            img.paste(avatar, (520, 80), mask)
+            img.save('./banner/banner.png')
+            file = discord.File('./banner/banner.png', filename='banner.png')
             embed = discord.Embed()
-            embed.set_image(url="attachment://testfile.png")
-            await channel.send(file=file, embed=embed)
+            embed.set_image(url="attachment://banner.png")
+            await ctx.send(file=file, embed=embed)
 
     @commands.command()
     async def hello(self, ctx, *, member: discord.Member = None):
@@ -142,6 +147,14 @@ class Basics(commands.Cog):
         em = discord.Embed(title=e_title)
         em.set_image(url=avatar)
         await ctx.send(embed=em)
+
+    @commands.command()
+    async def set_welcome(self, ctx, channel: discord.TextChannel):
+        """set welcome image channel"""
+        channelid = channel.id
+        self.set_channel = channelid
+        text = 'Welcome channel has been set for {0.mention}'.format(channel)
+        await ctx.send(text)
 
 def setup(bot):
     bot.add_cog(Basics(bot))

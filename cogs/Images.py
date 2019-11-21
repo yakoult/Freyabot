@@ -235,7 +235,7 @@ class Images(commands.Cog):
                     await ctx.send(r["gifv"])
                 else:
                     await ctx.send(r["link"])
-        else: 
+        else:
             await ctx.send(
                 _("Something went wrong. Error code is {code}.").format(code=data["status"])
                 )
